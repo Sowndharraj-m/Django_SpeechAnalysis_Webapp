@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<header style="margin-bottom: 3rem;">
+    <h1 style="font-size: 2.5rem;">Speech Insights Dashboard</h1>
+    <p style="color: var(--text-muted);">Overview of your speaking performance and metrics.</p>
+</header>
+
+<div class="stats-grid">
+    <div class="glass-card stat-item">
+        <h3>Average Speed</h3>
+        <div class="stat-value">{{ avg_wpm|floatformat:1 }} <span
+                style="font-size: 1rem; color: var(--text-muted);">WPM</span></div>
+    </div>
+    <div class="glass-card stat-item">
+        <h3>Total Filler Words</h3>
+        <div class="stat-value">{{ total_fillers }}</div>
+    </div>
+    <div class="glass-card stat-item">
+        <h3>Analyses Completed</h3>
+        <div class="stat-value">{{ results.count }}</div>
+    </div>
+</div>
+
+<div class="glass-card">
+    <h2 style="margin-bottom: 1.5rem;">Recent Analyses</h2>
+    <div class="log-list">
+        {% for result in results %}
+        <div class="log-item" style="border-bottom: 1px solid var(--glass-border); padding: 1rem 0;">
+            <div>
+                <div style="font-weight: 600;">{{ result.audio_file.title }}</div>
+                <div style="font-size: 0.875rem; color: var(--text-muted);">{{ result.created_at|date:"M d, Y H:i" }}
+                </div>
+            </div>
+            <div style="display: flex; gap: 2rem; align-items: center;">
+                <div style="text-align: right;">
+                    <div style="color: var(--primary); font-weight: 700;">{{ result.confidence_score }}%</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Score</div>
+                </div>
+                <a href="{% url 'result_detail' result.pk %}" class="btn-primary"
+                    style="font-size: 0.875rem; padding: 0.5rem 1rem; text-decoration: none;">View Details</a>
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align: center; color: var(--text-muted); padding: 2rem;">No analyses yet. Start by recording your
+            speech!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

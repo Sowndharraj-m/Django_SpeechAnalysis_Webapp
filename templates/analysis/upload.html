@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <h1 style="text-align: center; margin-bottom: 2rem;">New Speech Analysis</h1>
+
+    <div class="glass-card" style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem;">🎤 Record Audio</h2>
+        <div id="recording-controls" style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+            <div id="timer" style="font-size: 2rem; font-weight: 700; color: var(--text-muted);">00:00</div>
+            <div style="display: flex; gap: 1rem;">
+                <button id="startBtn" class="btn-primary" style="background: #10b981;">Start Recording</button>
+                <button id="stopBtn" class="btn-primary" style="background: #ef4444;" disabled>Stop</button>
+            </div>
+            <audio id="audioPreview" controls style="display: none; width: 100%; margin-top: 1rem;"></audio>
+
+            <form id="recordForm" method="POST" enctype="multipart/form-data"
+                style="display: none; width: 100%; margin-top: 1rem;">
+                {% csrf_token %}
+                <input type="hidden" name="title" value="Recorded Audio Analysis">
+                <input type="file" name="audio_file" id="recordedBlob" style="display: none;">
+                <button type="submit" class="btn-primary" style="width: 100%;">Analyze Recording</button>
+            </form>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin: 2rem 0; color: var(--text-muted);">OR</div>
+
+    <div class="glass-card">
+        <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem;">📁 Upload File</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Analysis Title</label>
+                <input type="text" name="title" placeholder="My Practice Session"
+                    style="width: 100%; padding: 0.75rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 0.5rem; color: white;">
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Audio File (MP3, WAV,
+                    M4A)</label>
+                <input type="file" name="audio_file" accept="audio/*" required style="width: 100%;">
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%;">Upload and Analyze</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let mediaRecorder;
+    let audioChunks = [];
+    let startTime;
+    let timerInterval;
+
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const timerDisplay = document.getElementById('timer');
+    const audioPreview = document.getElementById('audioPreview');
+    const recordForm = document.getElementById('recordForm');
+    const recordedBlobInput = document.getElementById('recordedBlob');
+
+    startBtn.addEventListener('click', async () => {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+            audioChunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            audioPreview.src = audioUrl;
+            audioPreview.style.display = 'block';
+            recordForm.style.display = 'block';
+
+            // Prepare file for form submission
+            const file = new File([audioBlob], "recording.wav", { type: "audio/wav" });
+            const container = new DataTransfer();
+            container.items.add(file);
+            recordedBlobInput.files = container.files;
+        };
+
+        mediaRecorder.start();
+        startTime = Date.now();
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        timerDisplay.style.color = '#ef4444';
+
+        timerInterval = setInterval(() => {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
+            const secs = String(elapsed % 60).padStart(2, '0');
+            timerDisplay.textContent = `${mins}:${secs}`;
+        }, 1000);
+    });
+
+    stopBtn.addEventListener('click', () => {
+        mediaRecorder.stop();
+        clearInterval(timerInterval);
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        timerDisplay.style.color = 'var(--text-muted)';
+    });
+</script>
+{% endblock %}
