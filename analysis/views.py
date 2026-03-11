@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView, TemplateView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login, logout, authenticate
@@ -7,6 +7,14 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import AudioFile, AnalysisResult
 from .utils import analyze_speech
 from django.urls import reverse_lazy
+
+class HomeView(TemplateView):
+    template_name = 'analysis/home.html'
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('dashboard')
+        return super().get(request, *args, **kwargs)
 
 class DashboardView(LoginRequiredMixin, ListView):
     model = AnalysisResult

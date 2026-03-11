@@ -1,16 +1,77 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="glass-card" style="max-width: 400px; margin: 4rem auto;">
-    <h2 style="text-align: center; margin-bottom: 2rem;">Welcome Back</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">Login</button>
-    </form>
-    <p style="text-align: center; margin-top: 1.5rem; color: var(--text-muted);">
-        Don't have an account? <a href="{% url 'signup' %}" style="color: var(--primary); text-decoration: none;">Sign
-            Up</a>
-    </p>
+<div style="max-width: 450px; margin: 4rem auto; animation: fadeIn 0.6s ease-out;">
+    <div class="glass-card" style="padding: 3rem 2.5rem;">
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+            <div
+                style="width: 64px; height: 64px; background: rgba(99, 102, 241, 0.1); border-radius: 16px; display: grid; place-items: center; margin: 0 auto 1.5rem; border: 1px solid var(--glass-border);">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                    <polyline points="10 17 15 12 10 7" />
+                    <line x1="15" y1="12" x2="3" y2="12" />
+                </svg>
+            </div>
+            <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Welcome Back</h1>
+            <p style="color: var(--text-dim);">Please enter your details to sign in.</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div style="margin-bottom: 1.5rem;">
+                {{ form.username.label_tag }}
+                <div style="margin-top: 0.5rem;">
+                    {{ form.username }}
+                </div>
+                {% if form.username.errors %}
+                <div style="color: var(--accent); font-size: 0.8rem; margin-top: 0.4rem;">{{ form.username.errors }}
+                </div>
+                {% endif %}
+            </div>
+            <div style="margin-bottom: 2rem;">
+                {{ form.password.label_tag }}
+                <div style="margin-top: 0.5rem;">
+                    {{ form.password }}
+                </div>
+                {% if form.password.errors %}
+                <div style="color: var(--accent); font-size: 0.8rem; margin-top: 0.4rem;">{{ form.password.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; height: 55px; font-size: 1.1rem;">Sign
+                In</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 2rem; color: var(--text-dim);">
+            Don't have an account? <a href="{% url 'signup' %}"
+                style="color: var(--primary); text-decoration: none; font-weight: 600;">Create account</a>
+        </div>
+    </div>
 </div>
+
+<style>
+    label {
+        display: block;
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.3) !important;
+        border: 1px solid var(--glass-border);
+        border-radius: 0.75rem;
+        color: white;
+        width: 100%;
+        transition: var(--transition);
+    }
+
+    input:focus {
+        border-color: var(--primary);
+        outline: none;
+    }
+</style>
 {% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section style="text-align: center; padding: 4rem 0; animation: fadeIn 0.8s ease-out;">
+    <h1 style="font-size: 4rem; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -0.03em;">
+        Perfect Your Speech with <span class="gradient-text">AI Precision</span>
+    </h1>
+    <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 3rem; line-height: 1.8;">
+        VoiceFlow uses advanced artificial intelligence to analyze your speaking patterns, detect filler words, and
+        provide actionable feedback to help you become a more confident speaker.
+    </p>
+
+    <div style="display: flex; gap: 1.5rem; justify-content: center; margin-bottom: 4rem;">
+        <a href="{% url 'signup' %}" class="btn-primary" style="padding: 1rem 2.5rem; font-size: 1.125rem;">Start Free
+            Analysis</a>
+        <a href="#features" class="glass-card"
+            style="padding: 1rem 2.5rem; text-decoration: none; border-radius: 0.75rem; font-weight: 600;">Learn
+            More</a>
+    </div>
+
+    <div class="glass-card"
+        style="max-width: 900px; margin: 0 auto; padding: 1rem; border-radius: 1.5rem; box-shadow: 0 30px 60px rgba(0,0,0,0.4);">
+        <div
+            style="background: #000; border-radius: 1rem; overflow: hidden; aspect-ratio: 16/9; display: grid; place-items: center;">
+            <div style="text-align: center;">
+                <div
+                    style="width: 64px; height: 64px; background: rgba(99, 102, 241, 0.2); border-radius: 50%; display: grid; place-items: center; margin: 0 auto 1rem; border: 1px solid var(--primary);">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)"
+                        stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3" />
+                    </svg>
+                </div>
+                <p style="color: var(--text-dim);">Product Demo Visualization</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="features" style="padding: 6rem 0;">
+    <div style="text-align: center; margin-bottom: 4rem;">
+        <h2 style="font-size: 2.5rem;">The Future of <span class="gradient-text">Communication Training</span></h2>
+    </div>
+
+    <div class="stats-grid">
+        <div class="glass-card">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎯</div>
+            <h3>Instant Feedback</h3>
+            <p style="color: var(--text-muted);">Get accurate metrics on your words per minute and confidence score
+                immediately after recording.</p>
+        </div>
+        <div class="glass-card">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🤖</div>
+            <h3>AI-Powered Insights</h3>
+            <p style="color: var(--text-muted);">Deep neural networks analyze your tone, pauses, and filler words to
+                suggest real improvements.</p>
+        </div>
+        <div class="glass-card">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">📊</div>
+            <h3>Progress Tracking</h3>
+            <p style="color: var(--text-muted);">Visualize your growth over time with our detailed dashboard and
+                historical analysis data.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

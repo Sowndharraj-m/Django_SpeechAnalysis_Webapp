@@ -1,19 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<header style="margin-bottom: 3rem;">
-    <h1 style="font-size: 2.5rem;">Speech Insights Dashboard</h1>
-    <p style="color: var(--text-muted);">Overview of your speaking performance and metrics.</p>
+<header style="margin-bottom: 3rem; animation: fadeIn 0.6s ease-out;">
+    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Speech Insights <span class="gradient-text">Dashboard</span>
+    </h1>
+    <p style="color: var(--text-muted);">Welcome back, {{ user.username }}. Here's your speaking performance overview.
+    </p>
 </header>
 
 <div class="stats-grid">
     <div class="glass-card stat-item">
         <h3>Average Speed</h3>
         <div class="stat-value">{{ avg_wpm|floatformat:1 }} <span
-                style="font-size: 1rem; color: var(--text-muted);">WPM</span></div>
+                style="font-size: 1rem; color: var(--text-muted); -webkit-text-fill-color: var(--text-muted);">WPM</span>
+        </div>
     </div>
     <div class="glass-card stat-item">
-        <h3>Total Filler Words</h3>
+        <h3>Total Fillers</h3>
         <div class="stat-value">{{ total_fillers }}</div>
     </div>
     <div class="glass-card stat-item">
@@ -22,29 +25,144 @@
     </div>
 </div>
 
-<div class="glass-card">
-    <h2 style="margin-bottom: 1.5rem;">Recent Analyses</h2>
+<div class="stats-grid" style="grid-template-columns: 2fr 1fr;">
+    <div class="glass-card">
+        <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem;">Performance Trend</h2>
+        <div style="height: 300px;">
+            <canvas id="performanceChart"></canvas>
+        </div>
+    </div>
+    <div class="glass-card">
+        <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem;">Quick Stats</h2>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="log-item" style="background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.2);">
+                <span style="color: var(--text-muted);">Best Accuracy</span>
+                <span style="font-weight: 700; color: var(--primary);">98%</span>
+            </div>
+            <div class="log-item" style="background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.2);">
+                <span style="color: var(--text-muted);">Fluency Rating</span>
+                <span style="font-weight: 700; color: var(--secondary);">High</span>
+            </div>
+            <div style="margin-top: 1rem;">
+                <a href="{% url 'upload' %}" class="btn-primary" style="width: 100%;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                        <line x1="12" x2="12" y1="19" y2="22" />
+                    </svg>
+                    New Analysis
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="glass-card" style="margin-top: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="font-size: 1.25rem; margin: 0;">Recent Analyses</h2>
+        <a href="#" style="color: var(--primary); text-decoration: none; font-size: 0.875rem; font-weight: 600;">View
+            All</a>
+    </div>
+
     <div class="log-list">
         {% for result in results %}
-        <div class="log-item" style="border-bottom: 1px solid var(--glass-border); padding: 1rem 0;">
-            <div>
-                <div style="font-weight: 600;">{{ result.audio_file.title }}</div>
-                <div style="font-size: 0.875rem; color: var(--text-muted);">{{ result.created_at|date:"M d, Y H:i" }}
+        <div class="log-item">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div
+                    style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 10px; display: grid; place-items: center;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)"
+                        stroke-width="2">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                        <path d="M19 10v1a7 7 0 0 1-14 0v-1" />
+                        <line x1="12" y1="19" x2="12" y2="23" />
+                        <line x1="8" y1="23" x2="16" y2="23" />
+                    </svg>
+                </div>
+                <div>
+                    <div style="font-weight: 600; color: white;">{{ result.audio_file.title }}</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">{{ result.created_at|date:"M d, Y • H:i"
+                        }}</div>
                 </div>
             </div>
-            <div style="display: flex; gap: 2rem; align-items: center;">
+            <div style="display: flex; gap: 2.5rem; align-items: center;">
                 <div style="text-align: right;">
-                    <div style="color: var(--primary); font-weight: 700;">{{ result.confidence_score }}%</div>
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Score</div>
+                    <div style="color: var(--primary); font-weight: 800; font-size: 1.125rem;">{{
+                        result.confidence_score|floatformat:0 }}%</div>
+                    <div
+                        style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em;">
+                        Confidence</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="color: var(--secondary); font-weight: 800; font-size: 1.125rem;">{{
+                        result.wpm|floatformat:0 }}</div>
+                    <div
+                        style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em;">
+                        WPM</div>
                 </div>
                 <a href="{% url 'result_detail' result.pk %}" class="btn-primary"
-                    style="font-size: 0.875rem; padding: 0.5rem 1rem; text-decoration: none;">View Details</a>
+                    style="padding: 0.5rem 1rem; font-size: 0.85rem; background: var(--glass); border: 1px solid var(--glass-border); box-shadow: none;">
+                    Details
+                </a>
             </div>
         </div>
         {% empty %}
-        <p style="text-align: center; color: var(--text-muted); padding: 2rem;">No analyses yet. Start by recording your
-            speech!</p>
+        <div style="text-align: center; padding: 4rem 2rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">🎙️</div>
+            <p style="color: var(--text-muted); font-size: 1.125rem;">No analyses yet. Start by recording your speech!
+            </p>
+            <a href="{% url 'upload' %}" class="btn-primary" style="margin-top: 1.5rem;">Analyze Now</a>
+        </div>
         {% endfor %}
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+
+    // Gradient for chart
+    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, 'rgba(99, 102, 241, 0.3)');
+    gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [{% for result in results reversed %}"{{ result.created_at|date:'M d' }}", {% endfor %}],
+        datasets: [{
+            label: 'Confidence Score',
+            data: [{% for result in results reversed %}{{ result.confidence_score | floatformat: 0 }}, {% endfor %}],
+        borderColor: '#6366f1',
+        borderWidth: 3,
+        backgroundColor: gradient,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: '#6366f1',
+        pointBorderColor: '#fff',
+        pointHoverRadius: 6
+            }]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100,
+                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                ticks: { color: '#94a3b8' }
+            },
+            x: {
+                grid: { display: false },
+                ticks: { color: '#94a3b8' }
+            }
+        }
+    }
+    });
+</script>
 {% endblock %}

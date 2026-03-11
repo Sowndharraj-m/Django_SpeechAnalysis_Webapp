@@ -1,69 +1,143 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="glass-card" style="margin-bottom: 2rem;">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-        <div>
-            <h1 style="margin-bottom: 0.5rem;">Analysis: {{ result.audio_file.title }}</h1>
-            <p style="color: var(--text-muted);">{{ result.created_at|date:"F d, Y at H:i" }}</p>
-        </div>
-        <div style="text-align: right;">
-            <div style="font-size: 3rem; font-weight: 800; color: var(--primary); line-height: 1;">{{
-                result.confidence_score|floatformat:0 }}%</div>
-            <div style="font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted);">
-                Confidence Score</div>
-        </div>
-    </div>
-</div>
-
-<div class="stats-grid">
-    <div class="glass-card">
-        <canvas id="gaugeChart"></canvas>
-        <div style="text-align: center; margin-top: 1rem;">
-            <div class="stat-value">{{ result.wpm|floatformat:1 }}</div>
-            <div style="color: var(--text-muted);">Words Per Minute</div>
-        </div>
-    </div>
-    <div class="glass-card">
-        <h3 style="margin-bottom: 1rem;">Filler Words</h3>
-        <div style="font-size: 2.5rem; font-weight: 700; color: #f59e0b;">{{ result.total_fillers }}</div>
-        <p style="font-size: 0.875rem; color: var(--text-muted);">Total filler occurrences detected.</p>
-        <div style="margin-top: 1rem;">
-            {% for word, count in result.filler_details.items %}
-            <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                <span>"{{ word }}"</span>
-                <span style="font-weight: 600;">{{ count }}</span>
+<div style="animation: fadeIn 0.8s ease-out;">
+    <div class="glass-card" style="margin-bottom: 2.5rem; border-bottom: 4px solid var(--primary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem;">
+            <div>
+                <nav aria-label="breadcrumb"
+                    style="background: none; padding: 0; backdrop-filter: none; border: none; margin-bottom: 0.5rem;">
+                    <a href="{% url 'dashboard' %}"
+                        style="color: var(--primary); text-decoration: none; font-size: 0.875rem; font-weight: 600;">←
+                        Back to Dashboard</a>
+                </nav>
+                <h1 style="font-size: 2.5rem; margin-bottom: 0.25rem;">{{ result.audio_file.title }}</h1>
+                <p style="color: var(--text-dim); font-weight: 500;">{{ result.created_at|date:"F d, Y • H:i" }}</p>
             </div>
-            {% endfor %}
+            <div
+                style="text-align: right; background: rgba(0,0,0,0.2); padding: 1.5rem 2rem; border-radius: 1.5rem; border: 1px solid var(--glass-border);">
+                <div class="gradient-text" style="font-size: 4rem; font-weight: 800; line-height: 1;">{{
+                    result.confidence_score|floatformat:0 }}<span
+                        style="font-size: 1.5rem; -webkit-text-fill-color: var(--text-muted);">%</span></div>
+                <div
+                    style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); font-size: 0.75rem; margin-top: 0.5rem;">
+                    Confidence Score</div>
+            </div>
         </div>
     </div>
+
+    <div class="stats-grid">
+        <div class="glass-card"
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+            <div style="width: 150px; height: 150px; position: relative; margin-bottom: 1rem;">
+                <canvas id="gaugeChart"></canvas>
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -10%);">
+                    <div class="stat-value" style="font-size: 2.5rem;">{{ result.wpm|floatformat:0 }}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">WPM</div>
+                </div>
+            </div>
+            <h3>Speaking Tempo</h3>
+            <p style="font-size: 0.875rem; color: var(--text-dim);">Ideal range: 120-160 WPM</p>
+        </div>
+
+        <div class="glass-card">
+            <h3 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                Filler Usage
+            </h3>
+            <div style="font-size: 3rem; font-weight: 800; color: #f59e0b; margin-bottom: 1rem;">{{ result.total_fillers
+                }}</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+                {% for word, count in result.filler_details.items %}
+                <div
+                    style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.875rem;">
+                    <span style="color: var(--text-muted);">{{ word }}:</span>
+                    <span style="font-weight: 700; color: #f59e0b;">{{ count }}</span>
+                </div>
+                {% empty %}
+                <p style="color: #10b981; font-weight: 600;">Excellent! No fillers detected.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <h3 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5">
+                    <rect x="6" y="4" width="4" height="16" />
+                    <rect x="14" y="4" width="4" height="16" />
+                </svg>
+                Pause Analysis
+            </h3>
+            <div style="font-size: 3rem; font-weight: 800; color: #10b981; margin-bottom: 0.5rem;">{{ result.pause_count
+                }}</div>
+            <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.5rem;">Significant pauses detected
+            </p>
+            <div
+                style="background: rgba(16, 185, 129, 0.05); padding: 1rem; border-radius: 12px; border: 1px dashed rgba(16, 185, 129, 0.2);">
+                <div style="font-size: 1.25rem; font-weight: 700; color: white;">{{
+                    result.total_pause_duration|floatformat:1 }}s</div>
+                <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Total Silence
+                    Duration</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card feedback-box" style="margin-bottom: 2.5rem; border-radius: 1.5rem;">
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+            <span
+                style="width: 32px; height: 32px; background: var(--primary); border-radius: 8px; display: grid; place-items: center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-11.7 8.38 8.38 0 0 1 3.8.9L21 3z" />
+                </svg>
+            </span>
+            AI Coaching Feedback
+        </h2>
+        <div style="font-size: 1.125rem; line-height: 1.8; color: var(--text-main); white-space: pre-line;">
+            {{ result.ai_feedback }}
+        </div>
+    </div>
+
     <div class="glass-card">
-        <h3 style="margin-bottom: 1rem;">Pause Analysis</h3>
-        <div style="font-size: 2.5rem; font-weight: 700; color: #10b981;">{{ result.pause_count }}</div>
-        <p style="font-size: 0.875rem; color: var(--text-muted);">Significant pauses (>500ms)</p>
-        <div style="margin-top: 1rem;">
-            <div style="font-size: 1.25rem; font-weight: 600;">{{ result.total_pause_duration|floatformat:2 }}s</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">Total Silence Duration</div>
+        <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem; color: var(--text-muted); font-weight: 600;">Full
+            Transcript</h2>
+        <div
+            style="background: rgba(0,0,0,0.3); padding: 2rem; border-radius: 1rem; line-height: 2; font-size: 1rem; border: 1px solid var(--glass-border); font-style: italic; color: var(--text-muted);">
+            "{{ result.transcription }}"
         </div>
-    </div>
-</div>
-
-<div class="glass-card feedback-box" style="margin-bottom: 2rem;">
-    <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">🤖 AI Feedback</h2>
-    <p style="font-size: 1.125rem; line-height: 1.6;">{{ result.ai_feedback }}</p>
-</div>
-
-<div class="glass-card">
-    <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem;">Transcript</h2>
-    <div
-        style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 0.5rem; line-height: 1.8; font-style: italic;">
-        {{ result.transcription }}
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    // Dashboard chart can be implemented here if needed (e.g. comparison etc)
+    const ctx = document.getElementById('gaugeChart').getContext('2d');
+
+    // Gauge style chart
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [{{ result.wpm }}, {{ 200| add: result.wpm |default: 200 }}],
+        backgroundColor: ['#6366f1', 'rgba(255, 255, 255, 0.05)'],
+        borderWidth: 0,
+        circumference: 180,
+        rotation: 270,
+        cutout: '85%',
+        borderRadius: 10
+    }]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: { enabled: false }
+        }
+    }
+    });
 </script>
 {% endblock %}
