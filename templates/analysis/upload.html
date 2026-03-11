@@ -43,110 +43,82 @@
 {% endblock %}
 
 {% block content %}
-<div style="max-width: 650px; margin: 0 auto; animation: fadeIn 0.8s ease-out;">
-    <div style="text-align: center; margin-bottom: 3rem;">
-        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">New <span class="gradient-text">Speech Analysis</span>
-        </h1>
-        <p style="color: var(--text-muted);">Record your voice or upload a file for deep analysis.</p>
+<div style="max-width: 800px; margin: 0 auto;" class="animate-fade-in-up">
+    <div style="text-align: center; margin-bottom: 4rem;">
+        <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">New <span class="gradient-text">Speech Analysis</span></h1>
+        <p style="color: var(--text-muted); font-size: 1.2rem;">Record your voice or drop a file to unlock AI-driven insights.</p>
     </div>
 
-    <div class="glass-card" style="margin-bottom: 2rem; position: relative; overflow: hidden;">
-        <div style="position: absolute; top: 0; right: 0; padding: 1rem;">
-            <div id="status-badge"
-                style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">
-                READY</div>
+    <div class="glass-card" style="margin-bottom: 3rem; padding: 4rem 2rem; border: 2px solid var(--primary); position: relative;">
+        <div style="position: absolute; top: 1.5rem; right: 1.5rem;">
+            <div id="status-badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; border: 1px solid rgba(16,185,129,0.2);">
+                READY
+            </div>
         </div>
 
-        <div id="recording-controls"
-            style="display: flex; flex-direction: column; align-items: center; padding: 2rem 0;">
-            <div id="timer"
-                style="font-size: 3rem; font-weight: 800; color: white; margin-bottom: 0.5rem; font-variant-numeric: tabular-nums;">
-                00:00</div>
+        <div id="recording-controls" style="display: flex; flex-direction: column; align-items: center;">
+            <div id="timer" style="font-size: 5rem; font-weight: 800; color: white; margin-bottom: 1rem; font-family: var(--font-heading); font-variant-numeric: tabular-nums; text-shadow: 0 10px 20px rgba(0,0,0,0.3);">
+                00:00
+            </div>
 
-            <div id="visualizer" class="visualizer-container">
-                <!-- Bars added via JS -->
-                {% for i in "12345678901234567890"|make_list %}
-                <div class="visualizer-bar" style="height: 10px; opacity: 0.3;"></div>
+            <div id="visualizer" class="visualizer-container" style="height: 120px; gap: 6px; margin-bottom: 3rem;">
+                {% for i in "123456789012345678901234567890"|make_list %}
+                <div class="visualizer-bar" style="height: 8px; opacity: 0.1; width: 5px; background: linear-gradient(to top, var(--primary), var(--secondary));"></div>
                 {% endfor %}
             </div>
 
-            <div id="recordBtnContainer" class="recording-circle" title="Click to Record">
-                <svg id="micIcon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
-                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                    <line x1="12" x2="12" y1="19" y2="22" />
+            <div id="recordBtnContainer" class="recording-circle" style="width: 140px; height: 140px; background: rgba(99,102,241,0.05); border-width: 3px; box-shadow: 0 0 40px rgba(99,102,241,0.2);">
+                <svg id="micIcon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>
                 </svg>
-                <div id="stopIcon"
-                    style="width: 30px; height: 30px; background: var(--accent); border-radius: 4px; display: none;">
-                </div>
+                <div id="stopIcon" style="width: 36px; height: 36px; background: var(--accent); border-radius: 8px; display: none; box-shadow: 0 0 20px rgba(244,63,94,0.4);"></div>
             </div>
+            
+            <p id="recordingHint" style="margin-top: 2rem; color: var(--text-dim); font-weight: 600; font-size: 0.9rem;">Click to start recording</p>
 
-            <div style="display: flex; gap: 1rem;">
-                <button id="startBtn" class="btn-primary" style="display: none;">Start Recording</button>
-                <button id="stopBtn" class="btn-primary" style="background: var(--accent); display: none;">Stop</button>
-            </div>
+            <audio id="audioPreview" controls style="display: none; width: 100%; max-width: 400px; margin-top: 3rem; border-radius: 12px; background: rgba(0,0,0,0.2);"></audio>
 
-            <audio id="audioPreview" controls
-                style="display: none; width: 100%; margin-top: 2rem; border-radius: 12px;"></audio>
-
-            <form id="recordForm" method="POST" enctype="multipart/form-data"
-                style="display: none; width: 100%; margin-top: 2rem;">
+            <form id="recordForm" method="POST" enctype="multipart/form-data" style="display: none; width: 100%; max-width: 400px; margin-top: 3rem;">
                 {% csrf_token %}
                 <input type="hidden" name="title" id="hidden_title" value="Recorded Session">
                 <input type="file" name="audio_file" id="recordedBlob" style="display: none;">
-                <button type="submit" class="btn-primary" style="width: 100%; height: 60px; font-size: 1.125rem;">
-                    Analyze Recording
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.5">
-                        <path d="M5 12h14" />
-                        <path d="m12 5 7 7-7 7" />
-                    </svg>
+                <button type="submit" class="btn-primary" style="width: 100%; height: 65px; font-size: 1.25rem; border-radius: 15px;">
+                    Start AI Analysis
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </button>
             </form>
         </div>
     </div>
 
-    <div style="text-align: center; margin: 3rem 0; position: relative;">
-        <div
-            style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--glass-border); z-index: 1;">
-        </div>
-        <span
-            style="background: var(--bg-dark); padding: 0 1.5rem; color: var(--text-dim); position: relative; z-index: 2; font-weight: 600; font-size: 0.875rem;">OR
-            UPLOAD MANUALLY</span>
+    <div style="text-align: center; margin: 4rem 0; position: relative;">
+        <div style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--glass-border); z-index: 1;"></div>
+        <span style="background: var(--bg-dark); padding: 0 2rem; color: var(--text-dim); position: relative; z-index: 2; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.2em;">OR UPLOAD FILE</span>
     </div>
 
-    <div class="glass-card">
-        <h2 style="font-size: 1.25rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-            </svg>
-            Choose Audio File
-        </h2>
+    <div class="glass-card" style="padding: 3rem;">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <div style="margin-bottom: 1.5rem;">
-                <label
-                    style="display: block; margin-bottom: 0.75rem; font-size: 0.875rem; color: var(--text-muted); font-weight: 600;">Analysis
-                    Title</label>
-                <input type="text" name="title" placeholder="e.g., Presentation Practice" required>
-            </div>
             <div style="margin-bottom: 2rem;">
-                <label
-                    style="display: block; margin-bottom: 0.75rem; font-size: 0.875rem; color: var(--text-muted); font-weight: 600;">Audio
-                    File (MP3, WAV, M4A)</label>
-                <div style="border: 2px dashed var(--glass-border); border-radius: 0.75rem; padding: 2rem; text-align: center; cursor: pointer; transition: var(--transition);"
+                <label style="display: block; margin-bottom: 1rem; font-size: 0.9rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">Session Title</label>
+                <input type="text" name="title" placeholder="e.g., Keynote Practice 2026" required style="background: rgba(0,0,0,0.3); padding: 1.25rem; font-size: 1.1rem; border-radius: 12px;">
+            </div>
+            <div style="margin-bottom: 3rem;">
+                <label style="display: block; margin-bottom: 1rem; font-size: 0.9rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">Audio Source</label>
+                <div style="border: 2px dashed var(--glass-border); border-radius: 1.5rem; padding: 4rem 2rem; text-align: center; cursor: pointer; transition: var(--transition); background: rgba(0,0,0,0.1);"
                     onclick="document.getElementById('fileInput').click()"
-                    onmouseover="this.style.borderColor='var(--primary)'"
-                    onmouseout="this.style.borderColor='var(--glass-border)'">
+                    onmouseover="this.style.borderColor='var(--primary)'; this.style.background='rgba(99,102,241,0.03)'"
+                    onmouseout="this.style.borderColor='var(--glass-border)'; this.style.background='rgba(0,0,0,0.1)'">
                     <input type="file" name="audio_file" id="fileInput" accept="audio/*" required style="display: none;"
-                        onchange="document.getElementById('fileName').textContent = this.files[0].name">
-                    <div id="fileName" style="color: var(--text-muted);">Drop your file here or click to browse</div>
+                        onchange="document.getElementById('fileName').innerHTML = '<span style=\'color: var(--primary-light)\'>Selected:</span> ' + this.files[0].name">
+                    
+                    <div style="width: 60px; height: 60px; background: rgba(255,255,255,0.03); border-radius: 50%; display: grid; place-items: center; margin: 0 auto 1.5rem;">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </div>
+                    <div id="fileName" style="color: var(--text-muted); font-weight: 600;">Drag your audio here or <span style="color: var(--primary);">browse files</span></div>
+                    <p style="color: var(--text-dim); font-size: 0.8rem; margin-top: 1rem;">Supports MP3, WAV, M4A up to 25MB</p>
                 </div>
             </div>
-            <button type="submit" class="btn-primary" style="width: 100%;">Upload for Analysis</button>
+            <button type="submit" class="btn-primary" style="width: 100%; height: 65px; border-radius: 15px;">Analyze Manual Upload</button>
         </form>
     </div>
 </div>

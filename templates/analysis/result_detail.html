@@ -1,112 +1,101 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div style="animation: fadeIn 0.8s ease-out;">
-    <div class="glass-card" style="margin-bottom: 2.5rem; border-bottom: 4px solid var(--primary);">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem;">
+<div class="animate-fade-in-up">
+    <div class="glass-card" style="margin-bottom: 3rem; border-left: 4px solid var(--primary); padding: 3rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 3rem;">
             <div>
-                <nav aria-label="breadcrumb"
-                    style="background: none; padding: 0; backdrop-filter: none; border: none; margin-bottom: 0.5rem;">
-                    <a href="{% url 'dashboard' %}"
-                        style="color: var(--primary); text-decoration: none; font-size: 0.875rem; font-weight: 600;">←
-                        Back to Dashboard</a>
-                </nav>
-                <h1 style="font-size: 2.5rem; margin-bottom: 0.25rem;">{{ result.audio_file.title }}</h1>
-                <p style="color: var(--text-dim); font-weight: 500;">{{ result.created_at|date:"F d, Y • H:i" }}</p>
+                <a href="{% url 'dashboard' %}" class="nav-link" style="font-size: 0.85rem; margin-bottom: 1.5rem; display: inline-block;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: middle; margin-right: 0.5rem;">
+                        <path d="m15 18-6-6 6-6"/>
+                    </svg>
+                    Back to Insights
+                </a>
+                <h1 style="font-size: 3.5rem; margin-bottom: 0.5rem; line-height: 1.1;">{{ result.audio_file.title }}</h1>
+                <p style="color: var(--text-dim); font-size: 1.1rem;">Analyzed on {{ result.created_at|date:"F d, Y • H:i" }}</p>
             </div>
-            <div
-                style="text-align: right; background: rgba(0,0,0,0.2); padding: 1.5rem 2rem; border-radius: 1.5rem; border: 1px solid var(--glass-border);">
-                <div class="gradient-text" style="font-size: 4rem; font-weight: 800; line-height: 1;">{{
-                    result.confidence_score|floatformat:0 }}<span
-                        style="font-size: 1.5rem; -webkit-text-fill-color: var(--text-muted);">%</span></div>
-                <div
-                    style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); font-size: 0.75rem; margin-top: 0.5rem;">
-                    Confidence Score</div>
+            
+            <div style="text-align: center; background: rgba(255,255,255,0.03); padding: 2.5rem 3.5rem; border-radius: 2rem; border: 1px solid var(--glass-border); box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+                <div class="gradient-text" style="font-size: 5rem; font-weight: 800; line-height: 1;">
+                    {{ result.confidence_score|floatformat:0 }}<span style="font-size: 1.5rem; -webkit-text-fill-color: var(--text-muted); opacity: 0.5;">%</span>
+                </div>
+                <div style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted); font-size: 0.7rem; margin-top: 1rem;">
+                    Confidence Score
+                </div>
             </div>
         </div>
     </div>
 
     <div class="stats-grid">
-        <div class="glass-card"
-            style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-            <div style="width: 150px; height: 150px; position: relative; margin-bottom: 1rem;">
+        <div class="glass-card" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 2rem;">
+            <div style="width: 160px; height: 160px; position: relative; margin-bottom: 2rem;">
                 <canvas id="gaugeChart"></canvas>
-                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -10%);">
-                    <div class="stat-value" style="font-size: 2.5rem;">{{ result.wpm|floatformat:0 }}</div>
-                    <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">WPM</div>
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -15%);">
+                    <div style="font-size: 3rem; font-weight: 800; color: white; line-height: 1;">{{ result.wpm|floatformat:0 }}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">WPM</div>
                 </div>
             </div>
-            <h3>Speaking Tempo</h3>
-            <p style="font-size: 0.875rem; color: var(--text-dim);">Ideal range: 120-160 WPM</p>
+            <h3 style="font-size: 1.25rem; color: white; margin-bottom: 0.5rem;">Speaking Tempo</h3>
+            <p style="font-size: 0.85rem; color: var(--text-dim);">Golden range: 130 - 150</p>
         </div>
 
-        <div class="glass-card">
-            <h3 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
-                Filler Usage
-            </h3>
-            <div style="font-size: 3rem; font-weight: 800; color: #f59e0b; margin-bottom: 1rem;">{{ result.total_fillers
-                }}</div>
-            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+        <div class="glass-card" style="padding: 3rem 2rem;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                <div style="width: 40px; height: 40px; background: rgba(245, 158, 11, 0.1); border-radius: 10px; display: grid; place-items: center;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <h3 style="font-size: 1.25rem; color: white; margin: 0;">Filler Detection</h3>
+            </div>
+            <div style="font-size: 4rem; font-weight: 800; color: #f59e0b; line-height: 1; margin-bottom: 2rem;">{{ result.total_fillers }}</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
                 {% for word, count in result.filler_details.items %}
-                <div
-                    style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.875rem;">
-                    <span style="color: var(--text-muted);">{{ word }}:</span>
-                    <span style="font-weight: 700; color: #f59e0b;">{{ count }}</span>
+                <div style="background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.1); padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.85rem;">
+                    <span style="color: var(--text-dim);">{{ word }}:</span>
+                    <span style="font-weight: 700; color: #f59e0b; margin-left: 0.25rem;">{{ count }}</span>
                 </div>
                 {% empty %}
-                <p style="color: #10b981; font-weight: 600;">Excellent! No fillers detected.</p>
+                <div style="display: flex; align-items: center; gap: 0.5rem; color: #10b981; font-weight: 600;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    Clean speech detected
+                </div>
                 {% endfor %}
             </div>
         </div>
 
-        <div class="glass-card">
-            <h3 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5">
-                    <rect x="6" y="4" width="4" height="16" />
-                    <rect x="14" y="4" width="4" height="16" />
-                </svg>
-                Pause Analysis
-            </h3>
-            <div style="font-size: 3rem; font-weight: 800; color: #10b981; margin-bottom: 0.5rem;">{{ result.pause_count
-                }}</div>
-            <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.5rem;">Significant pauses detected
-            </p>
-            <div
-                style="background: rgba(16, 185, 129, 0.05); padding: 1rem; border-radius: 12px; border: 1px dashed rgba(16, 185, 129, 0.2);">
-                <div style="font-size: 1.25rem; font-weight: 700; color: white;">{{
-                    result.total_pause_duration|floatformat:1 }}s</div>
-                <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Total Silence
-                    Duration</div>
+        <div class="glass-card" style="padding: 3rem 2rem;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                <div style="width: 40px; height: 40px; background: rgba(16, 185, 129, 0.1); border-radius: 10px; display: grid; place-items: center;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                </div>
+                <h3 style="font-size: 1.25rem; color: white; margin: 0;">Pause Analysis</h3>
+            </div>
+            <div style="font-size: 4rem; font-weight: 800; color: #10b981; line-height: 1; margin-bottom: 1rem;">{{ result.pause_count }}</div>
+            <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 2rem;">Intentional pauses identified</p>
+            <div style="background: rgba(255,255,255,0.02); padding: 1.25rem; border-radius: 15px; border: 1px solid var(--glass-border); display: flex; align-items: center; gap: 1rem;">
+                <div style="font-size: 1.5rem; font-weight: 800; color: white;">{{ result.total_pause_duration|floatformat:1 }}<span style="font-size: 0.9rem; opacity: 0.5;">s</span></div>
+                <div style="font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;">Total Silence</div>
             </div>
         </div>
     </div>
 
-    <div class="glass-card feedback-box" style="margin-bottom: 2.5rem; border-radius: 1.5rem;">
-        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
-            <span
-                style="width: 32px; height: 32px; background: var(--primary); border-radius: 8px; display: grid; place-items: center;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
-                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-11.7 8.38 8.38 0 0 1 3.8.9L21 3z" />
-                </svg>
-            </span>
-            AI Coaching Feedback
+    <div class="glass-card" style="margin-bottom: 3rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(168, 85, 247, 0.05)); border: 1px solid var(--primary);">
+        <h2 style="font-size: 1.75rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
+            <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 12px; display: grid; place-items: center; box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-11.7 8.38 8.38 0 0 1 3.8.9L21 3z"/></svg>
+            </div>
+            AI Coaching Insights
         </h2>
-        <div style="font-size: 1.125rem; line-height: 1.8; color: var(--text-main); white-space: pre-line;">
+        <div style="font-size: 1.2rem; line-height: 1.8; color: var(--text-main); white-space: pre-line; background: rgba(0,0,0,0.2); padding: 2.5rem; border-radius: 1.5rem; border: 1px solid var(--glass-border);">
             {{ result.ai_feedback }}
         </div>
     </div>
 
     <div class="glass-card">
-        <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem; color: var(--text-muted); font-weight: 600;">Full
-            Transcript</h2>
-        <div
-            style="background: rgba(0,0,0,0.3); padding: 2rem; border-radius: 1rem; line-height: 2; font-size: 1rem; border: 1px solid var(--glass-border); font-style: italic; color: var(--text-muted);">
-            "{{ result.transcription }}"
+        <h2 style="font-size: 1.5rem; margin-bottom: 2rem; color: var(--text-muted);">Transcription</h2>
+        <div style="background: rgba(0,0,0,0.4); padding: 3rem; border-radius: 1.5rem; line-height: 2; font-size: 1.1rem; border: 1px solid var(--glass-border); font-style: italic; color: var(--text-dim); position: relative;">
+            <span style="position: absolute; top: 1rem; left: 1.5rem; font-size: 4rem; color: var(--primary); opacity: 0.2; font-family: serif;">"</span>
+            {{ result.transcription }}
+            <span style="position: absolute; bottom: -1rem; right: 1.5rem; font-size: 4rem; color: var(--primary); opacity: 0.2; font-family: serif;">"</span>
         </div>
     </div>
 </div>
@@ -121,23 +110,23 @@
         type: 'doughnut',
         data: {
             datasets: [{
-                data: [{{ result.wpm }}, {{ 200| add: result.wpm |default: 200 }}],
-        backgroundColor: ['#6366f1', 'rgba(255, 255, 255, 0.05)'],
-        borderWidth: 0,
-        circumference: 180,
-        rotation: 270,
-        cutout: '85%',
-        borderRadius: 10
-    }]
+                data: [{{ result.wpm }}, {{ 200|add:result.wpm|default:200 }}],
+                backgroundColor: ['#6366f1', 'rgba(255, 255, 255, 0.05)'],
+                borderWidth: 0,
+                circumference: 180,
+                rotation: 270,
+                cutout: '85%',
+                borderRadius: 10
+            }]
         },
         options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: { display: false },
-            tooltip: { enabled: false }
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+            }
         }
-    }
     });
 </script>
 {% endblock %}

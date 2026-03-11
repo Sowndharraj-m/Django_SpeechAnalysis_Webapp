@@ -1,117 +1,110 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<header style="margin-bottom: 3rem; animation: fadeIn 0.6s ease-out;">
-    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Speech Insights <span class="gradient-text">Dashboard</span>
-    </h1>
-    <p style="color: var(--text-muted);">Welcome back, {{ user.username }}. Here's your speaking performance overview.
-    </p>
+<header style="margin-bottom: 4rem; display: flex; justify-content: space-between; align-items: flex-end;">
+    <div class="animate-fade-in-up">
+        <p style="color: var(--primary-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8rem; margin-bottom: 0.5rem;">Overview</p>
+        <h1 style="font-size: 3rem; margin: 0;">Speech <span class="gradient-text">Performance</span></h1>
+    </div>
+    <div class="animate-fade-in-up" style="text-align: right;">
+        <p style="color: var(--text-muted); margin: 0;">Welcome back, <strong>{{ user.username }}</strong></p>
+        <p style="color: var(--text-dim); font-size: 0.85rem;">Last session: {{ results.first.created_at|date:"M d, Y"|default:"No sessions yet" }}</p>
+    </div>
 </header>
 
-<div class="stats-grid">
+<div class="stats-grid animate-fade-in-up">
     <div class="glass-card stat-item">
-        <h3>Average Speed</h3>
-        <div class="stat-value">{{ avg_wpm|floatformat:1 }} <span
-                style="font-size: 1rem; color: var(--text-muted); -webkit-text-fill-color: var(--text-muted);">WPM</span>
-        </div>
+        <h3>Avg. Delivery Speed</h3>
+        <div class="stat-value">{{ avg_wpm|floatformat:1 }} <span style="font-size: 1.2rem; color: var(--text-dim); -webkit-text-fill-color: var(--text-dim);">WPM</span></div>
+        <div style="margin-top: 1rem; color: #10b981; font-size: 0.85rem; font-weight: 600;">Optimal Range (140-160)</div>
     </div>
     <div class="glass-card stat-item">
-        <h3>Total Fillers</h3>
+        <h3>Clarity Score</h3>
         <div class="stat-value">{{ total_fillers }}</div>
+        <div style="margin-top: 1rem; color: var(--accent); font-size: 0.85rem; font-weight: 600;">Total filler words detected</div>
     </div>
     <div class="glass-card stat-item">
-        <h3>Analyses Completed</h3>
+        <h3>Growth Index</h3>
         <div class="stat-value">{{ results.count }}</div>
+        <div style="margin-top: 1rem; color: var(--secondary); font-size: 0.85rem; font-weight: 600;">Sessions completed</div>
     </div>
 </div>
 
-<div class="stats-grid" style="grid-template-columns: 2fr 1fr;">
-    <div class="glass-card">
-        <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem;">Performance Trend</h2>
-        <div style="height: 300px;">
+<div class="stats-grid animate-fade-in-up" style="grid-template-columns: 2fr 1fr; gap: 2.5rem;">
+    <div class="glass-card" style="padding: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
+            <h2 style="font-size: 1.5rem; margin: 0;">Performance Trend</h2>
+            <div style="display: flex; gap: 0.5rem;">
+                <span style="width: 12px; height: 12px; background: var(--primary); border-radius: 3px;"></span>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Confidence %</span>
+            </div>
+        </div>
+        <div style="height: 350px;">
             <canvas id="performanceChart"></canvas>
         </div>
     </div>
-    <div class="glass-card">
-        <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem;">Quick Stats</h2>
-        <div style="display: flex; flex-direction: column; gap: 1rem;">
-            <div class="log-item" style="background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.2);">
-                <span style="color: var(--text-muted);">Best Accuracy</span>
-                <span style="font-weight: 700; color: var(--primary);">98%</span>
-            </div>
-            <div class="log-item" style="background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.2);">
-                <span style="color: var(--text-muted);">Fluency Rating</span>
-                <span style="font-weight: 700; color: var(--secondary);">High</span>
-            </div>
-            <div style="margin-top: 1rem;">
+    
+    <div class="glass-card" style="display: flex; flex-direction: column;">
+        <h2 style="font-size: 1.5rem; margin-bottom: 2rem;">Quick Start</h2>
+        <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 2rem; text-align: center;">
+            <div style="padding: 1.5rem; background: rgba(255,255,255,0.02); border-radius: var(--radius-md); border: 1px dashed var(--glass-border);">
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Ready to improve your skills?</p>
                 <a href="{% url 'upload' %}" class="btn-primary" style="width: 100%;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                        <line x1="12" x2="12" y1="19" y2="22" />
-                    </svg>
-                    New Analysis
+                    Analyze New Speech
                 </a>
+            </div>
+            
+            <div style="text-align: left;">
+                <h4 style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">Tips for delivery</h4>
+                <ul style="color: var(--text-dim); font-size: 0.85rem; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                    <li>Keep eye contact with the camera</li>
+                    <li>Vary your pitch and tone</li>
+                    <li>Pause for 2 seconds after key points</li>
+                </ul>
             </div>
         </div>
     </div>
 </div>
 
-<div class="glass-card" style="margin-top: 2rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h2 style="font-size: 1.25rem; margin: 0;">Recent Analyses</h2>
-        <a href="#" style="color: var(--primary); text-decoration: none; font-size: 0.875rem; font-weight: 600;">View
-            All</a>
+<div class="glass-card animate-fade-in-up" style="margin-top: 2.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.5rem; margin: 0;">Session History</h2>
+        <a href="#" class="nav-link" style="font-size: 0.85rem;">View Full Archive</a>
     </div>
 
     <div class="log-list">
         {% for result in results %}
         <div class="log-item">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <div
-                    style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 10px; display: grid; place-items: center;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)"
-                        stroke-width="2">
-                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-                        <path d="M19 10v1a7 7 0 0 1-14 0v-1" />
-                        <line x1="12" y1="19" x2="12" y2="23" />
-                        <line x1="8" y1="23" x2="16" y2="23" />
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1)); border-radius: 12px; display: grid; place-items: center; border: 1px solid var(--glass-border);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary-light)" stroke-width="2">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
                     </svg>
                 </div>
                 <div>
-                    <div style="font-weight: 600; color: white;">{{ result.audio_file.title }}</div>
-                    <div style="font-size: 0.8rem; color: var(--text-muted);">{{ result.created_at|date:"M d, Y • H:i"
-                        }}</div>
+                    <div style="font-weight: 700; color: white; font-size: 1.1rem; margin-bottom: 0.25rem;">{{ result.audio_file.title }}</div>
+                    <div style="font-size: 0.85rem; color: var(--text-dim);">{{ result.created_at|date:"F d • H:i" }}</div>
                 </div>
             </div>
-            <div style="display: flex; gap: 2.5rem; align-items: center;">
-                <div style="text-align: right;">
-                    <div style="color: var(--primary); font-weight: 800; font-size: 1.125rem;">{{
-                        result.confidence_score|floatformat:0 }}%</div>
-                    <div
-                        style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em;">
-                        Confidence</div>
+            <div style="display: flex; gap: 3rem; align-items: center;">
+                <div style="text-align: center;">
+                    <div style="color: var(--primary); font-weight: 800; font-size: 1.25rem;">{{ result.confidence_score|floatformat:0 }}%</div>
+                    <div style="font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;">Score</div>
                 </div>
-                <div style="text-align: right;">
-                    <div style="color: var(--secondary); font-weight: 800; font-size: 1.125rem;">{{
-                        result.wpm|floatformat:0 }}</div>
-                    <div
-                        style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em;">
-                        WPM</div>
+                <div style="text-align: center;">
+                    <div style="color: var(--secondary); font-weight: 800; font-size: 1.25rem;">{{ result.wpm|floatformat:0 }}</div>
+                    <div style="font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;">WPM</div>
                 </div>
-                <a href="{% url 'result_detail' result.pk %}" class="btn-primary"
-                    style="padding: 0.5rem 1rem; font-size: 0.85rem; background: var(--glass); border: 1px solid var(--glass-border); box-shadow: none;">
+                <a href="{% url 'result_detail' result.pk %}" class="btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.8rem; background: var(--glass); border: 1px solid var(--glass-border); box-shadow: none;">
                     Details
                 </a>
             </div>
         </div>
         {% empty %}
-        <div style="text-align: center; padding: 4rem 2rem;">
-            <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">🎙️</div>
-            <p style="color: var(--text-muted); font-size: 1.125rem;">No analyses yet. Start by recording your speech!
-            </p>
-            <a href="{% url 'upload' %}" class="btn-primary" style="margin-top: 1.5rem;">Analyze Now</a>
+        <div style="text-align: center; padding: 5rem 2rem;">
+            <div style="font-size: 4rem; margin-bottom: 1.5rem; filter: grayscale(1) opacity(0.3);">🎙️</div>
+            <p style="color: var(--text-muted); font-size: 1.2rem; margin-bottom: 2rem;">No speech analyses yet.</p>
+            <a href="{% url 'upload' %}" class="btn-primary">Start First Session</a>
         </div>
         {% endfor %}
     </div>
@@ -131,38 +124,38 @@
         type: 'line',
         data: {
             labels: [{% for result in results reversed %}"{{ result.created_at|date:'M d' }}", {% endfor %}],
-        datasets: [{
-            label: 'Confidence Score',
-            data: [{% for result in results reversed %}{{ result.confidence_score | floatformat: 0 }}, {% endfor %}],
-        borderColor: '#6366f1',
-        borderWidth: 3,
-        backgroundColor: gradient,
-        fill: true,
-        tension: 0.4,
-        pointBackgroundColor: '#6366f1',
-        pointBorderColor: '#fff',
-        pointHoverRadius: 6
+            datasets: [{
+                label: 'Confidence Score',
+                data: [{% for result in results reversed %}{{ result.confidence_score | floatformat:0 }}, {% endfor %}],
+                borderColor: '#6366f1',
+                borderWidth: 3,
+                backgroundColor: gradient,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#6366f1',
+                pointBorderColor: '#fff',
+                pointHoverRadius: 6
             }]
         },
         options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: { display: false }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                max: 100,
-                grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                ticks: { color: '#94a3b8' }
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
             },
-            x: {
-                grid: { display: false },
-                ticks: { color: '#94a3b8' }
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    ticks: { color: '#94a3b8' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#94a3b8' }
+                }
             }
         }
-    }
     });
 </script>
 {% endblock %}

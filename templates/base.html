@@ -22,37 +22,27 @@
 <body>
     <nav>
         <div class="logo-container">
-            <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-                <div
-                    style="width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 8px; display: grid; place-items: center;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"
-                        stroke-linecap="round" stroke-linejoin="round">
+            <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 10px; display: grid; place-items: center; box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
                         <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
                         <line x1="12" x2="12" y1="19" y2="22" />
                     </svg>
                 </div>
-                <span style="font-size: 1.5rem; font-weight: 800; color: white; letter-spacing: -0.02em;">Voice<span
-                        class="gradient-text">Flow</span></span>
+                <span style="font-size: 1.6rem; font-weight: 800; color: white; letter-spacing: -0.02em; font-family: var(--font-heading);">Voice<span class="gradient-text">Flow</span></span>
             </a>
         </div>
 
-        <div style="display: flex; gap: 2rem; align-items: center;">
+        <div style="display: flex; gap: 2.5rem; align-items: center;">
             {% if user.is_authenticated %}
-            <a href="{% url 'dashboard' %}"
-                style="color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 0.95rem;">Dashboard</a>
-            <a href="{% url 'upload' %}"
-                style="color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 0.95rem;">Record</a>
+            <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+            <a href="{% url 'upload' %}" class="nav-link">Record</a>
             <div style="width: 1px; height: 20px; background: var(--glass-border);"></div>
-            <a href="{% url 'logout' %}"
-                style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: var(--transition);"
-                onmouseover="this.style.color='var(--accent)'"
-                onmouseout="this.style.color='var(--text-muted)'">Logout</a>
+            <a href="{% url 'logout' %}" class="nav-link" style="color: var(--text-muted); font-size: 0.9rem;">Logout</a>
             {% else %}
-            <a href="{% url 'login' %}"
-                style="color: var(--text-main); text-decoration: none; font-weight: 600;">Login</a>
-            <a href="{% url 'signup' %}" class="btn-primary" style="padding: 0.6rem 1.25rem; font-size: 0.9rem;">Get
-                Started</a>
+            <a href="{% url 'login' %}" class="nav-link">Login</a>
+            <a href="{% url 'signup' %}" class="btn-primary" style="padding: 0.6rem 1.25rem; font-size: 0.9rem;">Get Started</a>
             {% endif %}
         </div>
     </nav>

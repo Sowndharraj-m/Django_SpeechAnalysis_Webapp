@@ -1,64 +1,57 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<section style="text-align: center; padding: 4rem 0; animation: fadeIn 0.8s ease-out;">
-    <h1 style="font-size: 4rem; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -0.03em;">
-        Perfect Your Speech with <span class="gradient-text">AI Precision</span>
-    </h1>
-    <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 3rem; line-height: 1.8;">
-        VoiceFlow uses advanced artificial intelligence to analyze your speaking patterns, detect filler words, and
-        provide actionable feedback to help you become a more confident speaker.
-    </p>
+<section style="text-align: center; padding: 8rem 0; position: relative;">
+    <div style="position: absolute; top: -10%; left: 50%; transform: translateX(-50%); width: 80%; height: 60%; background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%); z-index: -1;"></div>
+    
+    <div class="animate-fade-in-up">
+        <h1 style="font-size: 5.5rem; line-height: 0.95; margin-bottom: 2rem;">
+            Master Your Voice with <br>
+            <span class="gradient-text">AI Intelligence</span>
+        </h1>
+        <p style="font-size: 1.4rem; color: var(--text-muted); max-width: 800px; margin: 0 auto 3.5rem; line-height: 1.6;">
+            Elevate your communication skills with real-time feedback, deep analysis, and actionable insights powered by VoiceFlow's advanced speech AI.
+        </p>
 
-    <div style="display: flex; gap: 1.5rem; justify-content: center; margin-bottom: 4rem;">
-        <a href="{% url 'signup' %}" class="btn-primary" style="padding: 1rem 2.5rem; font-size: 1.125rem;">Start Free
-            Analysis</a>
-        <a href="#features" class="glass-card"
-            style="padding: 1rem 2.5rem; text-decoration: none; border-radius: 0.75rem; font-weight: 600;">Learn
-            More</a>
-    </div>
-
-    <div class="glass-card"
-        style="max-width: 900px; margin: 0 auto; padding: 1rem; border-radius: 1.5rem; box-shadow: 0 30px 60px rgba(0,0,0,0.4);">
-        <div
-            style="background: #000; border-radius: 1rem; overflow: hidden; aspect-ratio: 16/9; display: grid; place-items: center;">
-            <div style="text-align: center;">
-                <div
-                    style="width: 64px; height: 64px; background: rgba(99, 102, 241, 0.2); border-radius: 50%; display: grid; place-items: center; margin: 0 auto 1rem; border: 1px solid var(--primary);">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)"
-                        stroke-width="2">
-                        <polygon points="5 3 19 12 5 21 5 3" />
-                    </svg>
-                </div>
-                <p style="color: var(--text-dim);">Product Demo Visualization</p>
-            </div>
+        <div style="display: flex; gap: 1.5rem; justify-content: center; align-items: center;">
+            <a href="{% url 'signup' %}" class="btn-primary" style="padding: 1.25rem 3rem; font-size: 1.1rem;">
+                Get Started Free
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                </svg>
+            </a>
+            <a href="#features" class="nav-link" style="font-size: 1.1rem;">Explore Features</a>
         </div>
     </div>
 </section>
 
-<section id="features" style="padding: 6rem 0;">
-    <div style="text-align: center; margin-bottom: 4rem;">
-        <h2 style="font-size: 2.5rem;">The Future of <span class="gradient-text">Communication Training</span></h2>
+<section id="features" style="padding: 10rem 0;">
+    <div style="text-align: center; margin-bottom: 6rem;">
+        <h2 style="font-size: 3rem; margin-bottom: 1.5rem;">Precision Tools for <span class="gradient-text">Confident Speakers</span></h2>
+        <p style="color: var(--text-muted); font-size: 1.1rem;">Everything you need to analyze, understand, and improve your speaking performance.</p>
     </div>
 
     <div class="stats-grid">
-        <div class="glass-card">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎯</div>
-            <h3>Instant Feedback</h3>
-            <p style="color: var(--text-muted);">Get accurate metrics on your words per minute and confidence score
-                immediately after recording.</p>
+        <div class="glass-card animate-fade-in-up" style="animation-delay: 0.1s;">
+            <div style="width: 50px; height: 50px; background: rgba(99, 102, 241, 0.1); border-radius: 12px; display: grid; place-items: center; margin-bottom: 2rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <h3 style="font-size: 1.25rem; color: white; margin-bottom: 1rem; text-transform: none; letter-spacing: 0;">Speech Accuracy</h3>
+            <p style="color: var(--text-muted);">High-precision transcription that captures every detail of your delivery with 99% accuracy.</p>
         </div>
-        <div class="glass-card">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🤖</div>
-            <h3>AI-Powered Insights</h3>
-            <p style="color: var(--text-muted);">Deep neural networks analyze your tone, pauses, and filler words to
-                suggest real improvements.</p>
+        <div class="glass-card animate-fade-in-up" style="animation-delay: 0.2s;">
+            <div style="width: 50px; height: 50px; background: rgba(168, 85, 247, 0.1); border-radius: 12px; display: grid; place-items: center; margin-bottom: 2rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--secondary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <h3 style="font-size: 1.25rem; color: white; margin-bottom: 1rem; text-transform: none; letter-spacing: 0;">Filler Detection</h3>
+            <p style="color: var(--text-muted);">Automatically identify "ums", "ahs", and repeated words that weaken your core message.</p>
         </div>
-        <div class="glass-card">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">📊</div>
-            <h3>Progress Tracking</h3>
-            <p style="color: var(--text-muted);">Visualize your growth over time with our detailed dashboard and
-                historical analysis data.</p>
+        <div class="glass-card animate-fade-in-up" style="animation-delay: 0.3s;">
+            <div style="width: 50px; height: 50px; background: rgba(244, 63, 94, 0.1); border-radius: 12px; display: grid; place-items: center; margin-bottom: 2rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <h3 style="font-size: 1.25rem; color: white; margin-bottom: 1rem; text-transform: none; letter-spacing: 0;">Pace Analysis</h3>
+            <p style="color: var(--text-muted);">Visualize your speed throughout your presentation to ensure optimal engagement from your audience.</p>
         </div>
     </div>
 </section>
